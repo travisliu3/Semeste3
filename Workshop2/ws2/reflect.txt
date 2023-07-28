@@ -1,0 +1,119 @@
+/*
+*****************************************************************************
+				OOP244-Workshop-2
+Full Name  : Travis Liu
+e-mail     : tliu84@myseneca.ca
+Student ID#: 156740201
+Date       : 18 September, 2022
+Section    : ZAA
+
+I have done all the coding by myself and only copied the code that my
+professor provided to complete my workshops and assignments.
+*****************************************************************************
+*/
+In this workshop, I learnt the following concepts:
+1.retrieve records from a text file using an input file stream object
+eg-in.open(filename);
+		in.ignore(1000, '\n');
+		for (int i = 0; !in.eof(); i++) {
+			getline(in, matches[i].tournamentid, ',');
+			getline(in, matches[i].tournamentname, ',');
+			in >> matches[i].matchid;
+			in.ignore();
+			getline(in, matches[i].winner, ',');
+			getline(in, matches[i].loser, '\n');
+		}
+		in.close();
+In the above example, 'in' is an ifstream object which is used to read records from the file
+and the file name is stored in the const char* named filename. 'in.open(filename);' is used to
+open the file to read and the following line 'in.ignore(1000, '\n');' is used to skip the head of the
+file. getline fuction is used to read the data in to the strings tournamentid, tournamentname, winner and loser
+in the struct matches[i].
+
+
+2.count the number of records in a text file
+eg-totalmatches = 0;
+		std::ifstream in(filename);
+		while (!in.eof()) {
+			in.ignore(1000, '\n');
+			totalmatches++;
+		}
+		totalmatches -= 2;
+		matches = new TennisMatch[totalmatches];
+		in.close();
+In the above example, 'in' is an ifstream object which is used to read records from the file
+and the file name is stored in the const char* named filename. eof() function is used to check
+if the end of file is reached while looping through every row in the data file and adding 1 to
+totalmatches which was initialized to 0. Afterwards, 1 is subtracted to from totalmatches to ignore
+the head of the file.
+
+3.monitor the time spent on a particular task using the std::chrono library
+eg-void Timer::start() {
+		tstart = chrono::steady_clock::now();
+	}
+
+	long int Timer::stop() {
+		tstop = chrono::steady_clock::now();
+		time = std::chrono::duration_cast<std::chrono::nanoseconds>(tstop - tstart);
+		return time.count();
+	}
+There are two types of clock in chrono library which are steady_clock and system_clock. In the above example,
+I used steady_clock. Steady_clock is a monotonus clock that goes on at a uniform rate and is same for all systems
+where as system_clock is the local system's clock which could be different for different time zones. 'tstart' and
+'tstop' are both time_point class instances that stores a particular timestamp of respective clock being used.
+'time' is a duration class instance that stores difference between any timestamp. duration_cast is used to typecast
+the outcome of difference of two timestamp into nanoseconds. At the end count() function is used to to convert the
+time instance to long long and return.
+
+4.implement copy semantics for a class with a resource
+eg-TennisLog::TennisLog(const TennisLog& copy) {
+		*this = copy;
+	}
+TennisLog& TennisLog::operator=(const TennisLog& copy) {
+		if (this != &copy)
+		{
+			delete[] matches;
+			totalmatches = copy.totalmatches;
+			matches = new TennisMatch[totalmatches];
+			for (int i = 0; i < totalmatches; i++)
+			{
+				matches[i] = copy.matches[i];
+			}
+		}
+		return *this;
+	}
+In the above example, I dynamically allocated a new memory to the instance of TennisMatch class 'matches' of current object
+of the size of the to be copied instance 'copy.matches'. Afterwards, I looped through all the data in the 'copy.matches'
+and copied all the data from 'copy.matches' to 'matches'.
+
+5.implement move semantics for a class with a resource
+eg-TennisLog::TennisLog(TennisLog&& move) {
+		*this = std::move(move);
+	}
+TennisLog& TennisLog::operator=(TennisLog&& move) {
+		if (this != &move)
+		{
+			delete[] matches;
+			totalmatches = move.totalmatches;
+			move.totalmatches = 0;
+			this->matches = move.matches;
+			move.matches = nullptr;
+		}
+		return *this;
+	}
+In the above example, 'move' is a rvalue reference therefore 'move' trnsfers the ownership of the dynamic memory
+that points to 'move.matches' to the current object's 'matches'.
+
+6.identify the processing-intensive operations in copy and move assignments
+eg-for (int i = 0; i < totalmatches; i++)
+			{
+				matches[i] = copy.matches[i];
+			}
+The copying of the dynamic memory of 'copy.matches' to 'matches' of the current object is the most processing-intensive
+part of the copy assignments.
+
+totalmatches = move.totalmatches;
+The copying of the 'totalmatches' of 'move' object to 'totalmatches' of the current object is the most processing-intensive
+part of the move assignments.
+
+In both instnces of copy and move assignemnt, the copy part of the program is the most processing-intensive.

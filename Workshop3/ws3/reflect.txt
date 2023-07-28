@@ -1,0 +1,91 @@
+/*
+*****************************************************************************
+			OOP244-Workshop-3, part-2
+Full Name  : Travis Liu
+e-mail     : tliu84@myseneca.ca
+Student ID#: 156740201
+Date       : 27 September, 2022
+Section    : ZAA
+
+I have done all the coding by myself and only copied the code that my
+professor provided to complete my workshops and assignments.
+*****************************************************************************
+*/
+
+We don't put the implementation of the template in a seperate .cpp file but in
+the same file as the .h file because compiler generates code depending upon what
+type of data type is used to call the tempated function, class, etc. If the code
+of the template is implemented in the .cpp file the compiler dosen't know how to
+generate the code.
+
+In dictionary class I added the following functions.
+	Dictionary(); // I added default constructor to instantiate the member variable to an empty state.
+	bool operator==(const Dictionary& copy); // In UniqueQueue.h file we are using '==' operator to compare
+						(Queue<T, 100u>::operator[](i) == item)different elements of array of type 'Dictionary' to the
+						incoming paramenter in the function 'push(const T& item)'
+
+
+In this workshop I learn the following:
+1.instantiate a template class
+eg-sdds::Queue<long, 100>* UniqueQueueIntegers = new sdds::UniqueQueue<long>();
+In the above example, 'UniqueQueueIntegers' is an instace of type 'Queue' template
+class.
+
+2.specialize a member function of a templated class to process a particular type
+eg-template <>
+	sdds::Dictionary Queue<sdds::Dictionary, 100>::operator[](size_t i) const {
+		sdds::Dictionary dummy("Empty Term", "Empty Substitute");
+		if (i < size())
+		{
+			return obj[i];
+		}
+		return dummy;
+	}
+In the above example, 'template <>' shows that we are going to do specialization and
+'Queue<sdds::Dictionary, 100>' this part of code specifies for which type of values
+should this specialized 'operator[](size_t i)' should be called. the identifier
+'dummy' of type 'Dictionary' is initalized with terms '"Empty Term", "Empty Substitute"'
+which is returned when 'if (i < size())' condition fails.
+
+3.derive a templated class from another templated class
+eg-template <typename T>
+	class UniqueQueue : public Queue<T, 100> {
+	public:
+		bool push(const T& item);
+	};
+In the above example, I derived a templated class 'UniqueQueue' from another templated
+class 'Queue' when the 2nd argument of the template is 100.
+
+4.design and code a class template
+eg-template <typename T, unsigned int CAPACITY> // template header
+	class Queue
+	{
+		static T obj[CAPACITY];
+		static unsigned int Size;
+	public:
+		virtual ~Queue() {};
+		virtual bool push(const T& item);
+		T pop();
+		unsigned int size() const;
+		void display(std::ostream& os = std::cout) const;
+		T operator[](size_t i)const;
+	};
+template <typename T, unsigned int CAPACITY>
+	unsigned int Queue<T, CAPACITY>::size() const {
+		return Size;
+	}
+In the above example, I coded one of the member function of tmeplated class 'Queue' that returns
+the value Size of the class 'Queue'. 
+
+5.template a class variable
+eg-template <typename T, unsigned int CAPACITY>
+	unsigned int Queue<T, CAPACITY>::Size{};
+In the above example, I initalized a class variable of templated class 'Queue' and I did't use a
+constructor for this because 'Size' is static and therefore cannot be shared between differet type
+of 'Queue'.
+
+6.specialize a templated class variable for a particular type
+eg-template <>
+	unsigned int Queue<sdds::Dictionary, 100>::Size{};
+In the above example, 'template <>' shows a specialization and 'Queue<sdds::Dictionary, 100>' shows
+for which type of 'Queue' should the above value of 'Size' be initalized.

@@ -1,0 +1,88 @@
+/*
+*****************************************************************************
+				OOP244-Workshop-7, reflection
+Full Name  : Travis Liu
+e-mail     : tliu84@myseneca.ca
+Student ID#: 156740201
+Date       : 6 November, 2022
+Section    : ZAA
+
+I have done all the coding by myself and only copied the code that my
+professor provided to complete my workshops and assignments.
+*****************************************************************************
+*/
+In this workshop I learnt the following concepts:
+1.copy data from a file into a sequential container
+eg-while (in)
+		{
+			Crime temp{};
+			temp.m_province = tempstring.substr(0, 25);
+			while (temp.m_province[temp.m_province.length() - 1] == ' ')
+			{
+				temp.m_province.erase(temp.m_province.length() - 1, 1);
+			}
+			temp.m_district = tempstring.substr(25, 25);
+			while (temp.m_district[temp.m_district.length() - 1] == ' ')
+			{
+				temp.m_district.erase(temp.m_district.length() - 1, 1);
+			}
+			temp.m_crimes = tempstring.substr(50, 25);
+			while (temp.m_crimes[temp.m_crimes.length() - 1] == ' ')
+			{
+				temp.m_crimes.erase(temp.m_crimes.length() - 1, 1);
+			}
+			temp.m_year = stoi(tempstring.substr(75, 5));
+			temp.m_cases = stoi(tempstring.substr(80, 5));
+			temp.m_resolved = stoi(tempstring.substr(85, 5));
+
+			m_crime.push_back(temp);
+			getline(in, tempstring);
+		}
+In the above example, I am reading from a file using the ifstream object 'in'. I created
+tempstring object of String and reading a line using in from the file into tempstring.
+I created temp object of type Crime and extracting each token in the attributes of temp
+from tempstring using substr. Since at an interval of 25 charecters a token starts, I set
+the offset at an interval of 25 and read the charecters according to the field width specified
+in the file strcture. At the end of loop, I am pushing each temp object to m_crime container
+attribute of CrimeStatistics class.
+
+2.use the numeric library to accumulate data values
+eg-auto crimes = std::accumulate(m_crime.begin(), m_crime.end(), (int)0, [](int crime1, const Crime crime2) {
+			return crime1 + crime2.m_cases;
+			});
+In the above example, I am using std::accumulate function of numeric library to find the total
+number of cases and store the result in crimes. The first argument specifies the start point and
+second argument specifies the end point of the vector m_crime. Third argument((int)0) specifies the initial
+value on which values from m_crime will be added. Lastly I created a lambda function to add the
+values from crime2 to crime1.
+
+3.use a lambda expression to specify an operation on each value in a data set
+eg-for_each(m_crime.begin(), m_crime.end(), [&out](const Crime prntcrime) {
+			out << prntcrime << endl;
+			});
+In the above example, I am using a lambda expression inside a for_each function to print to the
+screen all the values in each element in m_crime by calling the << operator overload on Crime
+structire.
+
+4.use the algorithm library to sort data values
+eg-std::sort(m_crime.begin(), m_crime.end(), [&field](const Crime crime1, const Crime crime2) {
+			if (field == "Province")
+			{
+				return crime1.m_province < crime2.m_province;
+			}
+			else if (field == "Crime")
+			{
+				return crime1.m_crimes < crime2.m_crimes;
+			}
+			else if (field == "Cases")
+			{
+				return crime1.m_cases < crime2.m_cases;
+			}
+			else if (field == "Resolved")
+			{
+				return crime1.m_resolved < crime2.m_resolved;
+			}
+			});
+In the above example, I am using the sort function to sort data in m_crime accoring to the string
+literal in field identifier in the capture list. Accoring to the value in field the m_crime
+vector is sorted in ascending order.

@@ -1,0 +1,71 @@
+/*
+*****************************************************************************
+			OOP244-Workshop-1 Reflection
+Full Name  : Travis Liu
+e-mail     : tliu84@myseneca.ca
+Student ID#: 156740201
+Date       : 11 September, 2022
+Section    : ZCC
+
+I have done all the coding by myself and only copied the code that my
+professor provided to complete my workshops and assignments.
+*****************************************************************************
+*/
+constexpr int MAX_CARS = 100;
+In the above expression, constexpr ensures that MAX_CARS have a value at compile
+time.
+
+In this workshop, I learnt the following concepts:
+1.receive program arguments from the command line
+eg-int main(int argc, char** argv)
+{
+	// will break compilation if best practices about namespaces are ignored
+	cout = 1;
+.
+.
+.
+}
+In the above example, I used command line which are the parameters in main fuction(int argc, char** argv)
+to recieve program arguments, where argc holds the number of values(strings) in argv.
+
+2.guard a class definition from duplication in a translation unit
+eg-#ifndef SDDS_CARADS_H__
+#define SDDS_CARADS_H__
+.
+.
+.
+#endif
+In the above example, I am preventing any duplication of the class carads by using pre-processors.
+The pre-processors checks first if the the module is defined, if the module is defined it skips
+it and if not defined it defines and module and the class carads.
+
+3.access a variable defined in a different translation unit
+eg-if (ad == 1) { // special day! no tax for all cars and 10% discount for applicable cars!
+			g_taxrate = 0;
+			g_discount = 0.10;
+		}
+		else {
+			g_taxrate = 0.13;
+			g_discount = 0.05;
+		}
+In the above example, 'g_taxrate' and 'g_discount' are defined in 'carads' module using 'extern'
+keyword which is being accessed in the main fuction. The value and changes in value of 'g_taxrate'
+and 'g_discount' are same for all transition units where the 'carads' module is included.
+
+
+4.declare a local variable that resides in memory throughout the lifetime of the program
+eg-static int counter = 1;
+		if (reset)
+		{
+			counter = 1;
+		}
+In the above example, 'static' keeps scope of the variable counter local and extends the lifetime
+of the program beyond it's scope to the lifetime of the whole program.
+
+5.upgrade code to accept and manage a user-defined string of any length
+eg-getline(is, bb, ',');
+	brand = new char[char_traits<char>::length(bb.c_str()) + 1];
+	strcpy(brand, bb.c_str());
+In the above example, bb is a user defined string. 'is' is an instance of ifstream(istream is used as
+parameters but ifstream inherits from istream). 'char_traits<char>::length(bb.c_str())' returns the
+length of string and c_str() allows bb to be used as a cstring.

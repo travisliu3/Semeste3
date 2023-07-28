@@ -1,0 +1,71 @@
+/*
+*****************************************************************************
+					OOP244-Workshop-6, reflection
+Full Name  : Travis Liu
+e-mail     : tliu84@myseneca.ca
+Student ID#: 156740201
+Date       : 4 November, 2022
+Section    : ZAA
+
+I have done all the coding by myself and only copied the code that my
+professor provided to complete my workshops and assignments.
+*****************************************************************************
+*/
+In this workshop I learnt the following concepts:
+1.manage polymorphic objects using the vector container of the STL
+eg-std::vector<Vehicle*> m_vehicles;
+In the above example, I created a vector container of Vehicle class pointer that
+stores a pointer to a Car class or a Van class, both of which inherits from the
+base class Vehicle.
+
+2.move a dynamically allocated object into a container
+eg-Autoshop& Autoshop::operator +=(Vehicle* theVehicle) {
+		m_vehicles.push_back(move(theVehicle));
+		return *this;
+	}
+In the above example, I created a += operator overload that moves the pointer 'theVehicle'
+to the vector m_vehicles. Since, m_vechiles is a vector container I used .push_back() to
+move the 'theVehicle' pointer to the back of the m_vehicles pointer Vehicle.
+
+3.code a range-based iteration on the objects in a container
+eg-void Autoshop::display(std::ostream& out) const {
+		for (auto it = m_vehicles.begin(); it != m_vehicles.end(); it++)
+		{
+			(*it)->display(out);
+			out << endl;
+		}
+	}
+In the above example, I created a for loop that iterates through all the elements in the container
+and displays the content in each instance element of m_vehicles on the screen. m_vehicles.begin()
+returns a pointer to the first element and m_vehicles.end() returns a pointer to the element just
+after the last element in m_vehicles vector container. The iterator it points to each element in
+m_vehicles vector container through the loop starting with the first elemet and points to the next
+elemet in the next iteration till the last element in the vector.
+
+4.report and handle an exception
+eg-		try
+		{
+			sdds::Vehicle* aVehicle = sdds::createInstance(file);
+			if (aVehicle)
+				as += aVehicle;
+		}
+		catch (std::invalid_argument err)
+		{
+			file.ignore(1000, '\n');
+			std::cout << "Invalid record!" << std::endl;
+		}
+		catch (std::runtime_error err)
+		{
+			std::cout << err.what() << std::endl;
+		}
+		catch (const std::string err)
+		{
+			std::cout << err << std::endl;
+			file.ignore(1000, '\n');
+		}
+In the above example I am catching 3 types of exception which are std::invalid_argument err,
+std::runtime_error err and const std::string err. std::invalid_argument err takes place when
+an invalid data which is not a number is attempted to read into m_topspeed attribute of Car class,
+std::runtime_error err occurs when any invalid charecter is entered in any string attribute like
+m_condition attribute of Car class and const std::string err occurs when the category of the vehicle
+is not of type car, Van, RaceCar and LuxuryVan.

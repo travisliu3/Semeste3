@@ -1,0 +1,16 @@
+﻿  CrimeStatistics.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\numeric(25,1): warning C4267: '=': conversion from 'size_t' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Travis\college\Semester3\OOP345\Workshop7\CrimeStatistics.cpp(67): message : see reference to function template instantiation '_Ty std::accumulate<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<sdds::Crime>>>,int,sdds::CrimeStatistics::display::<lambda_2>>(const _InIt,const _InIt,_Ty,_Fn)' being compiled
+          with
+          [
+              _Ty=int,
+              _InIt=std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<sdds::Crime>>>,
+              _Fn=sdds::CrimeStatistics::display::<lambda_2>
+          ]
+  w7_p2.cpp
+  Generating Code...
+  Workshop7.vcxproj -> C:\Travis\college\Semester3\OOP345\Workshop7\x64\Debug\Workshop7.exe

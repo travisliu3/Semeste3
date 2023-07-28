@@ -1,0 +1,177 @@
+/*
+*****************************************************************************
+				OOP244-Workshop-5, reflection
+Full Name  : Travis Liu
+e-mail     : tliu84@myseneca.ca
+Student ID#: 156740201
+Date       : 10 October, 2022
+Section    : ZAA
+
+I have done all the coding by myself and only copied the code that my
+professor provided to complete my workshops and assignments.
+*****************************************************************************
+*/
+
+A functor is a class member function that used for more complex logic and has access to the class attributes
+for logical operations. It is created inside a class. It has class scope.
+eg-void SpellChecker::operator()(string& text) {
+		for (size_t i = 0; i < 6; i++)
+		{
+			size_t start = text.find(m_badWords[i]);
+			while (start != -1)
+			{
+				text.replace(start, strlen(m_badWords[i].c_str()), m_goodWords[i]);
+				m_errors[i]++;
+				start = text.find(m_badWords[i], start + 1);
+			}
+		}
+	}
+Lambda expressions are used for very short and simple logic and has access to only the local variables of the
+function. It is created inside another function. It has function scope.
+eg-auto lib = [usdToCadRate, gbpToCadRate](sdds::Book& book) {
+		if (book.country() == "US")
+		{
+			book.price() *= usdToCadRate;
+		}
+		else if (book.country() == "UK" && (book.year() >= 1990 && book.year() <= 1999))
+		{
+			book.price() *= gbpToCadRate;
+		}
+	};
+
+To eliminate the use of exception in SpellChecker module, I would print the error message to the screen instead
+of throw the error message and remove the try catch statements from the main module.
+std::ifstream in(filename);
+		if (in)
+		{
+			for (size_t i = 0; i < 6; i++)
+			{
+				in >> m_badWords[i] >> m_goodWords[i];
+			}
+		}
+		else
+		{
+			throw "Bad file name!";
+		}
+
+I will create an inheritance between Book and Movie class, where Book inherits from Movie. The common attributes
+like m_title, m_des and m_year will be read from the Movie class constructor.
+
+Default constructor cannot be removed in Movie and Book class because when any type of constructor is created, the
+creation of the default constructor is also mandatory by the programmer. The initalization of the class attributes
+to a safe empty state is also necessary when no arguments are passed for the initalization of the class attributes.
+
+In this workshop I learnt the following concepts:
+1.design and code a templated class that allocates and deallocates dynamic memory
+eg-template<typename T>
+	Collection<T>& Collection<T>::operator+=(const T& item) {
+		for (size_t i = 0; i < m_size; i++)
+		{
+			if (m_items[i].title() == item.title()) {
+				return *this;
+			}
+		}
+		T* newitem = new T[m_size + 1];
+		for (size_t i = 0; i < m_size; i++)
+		{
+			newitem[i] = m_items[i];
+		}
+		newitem[m_size] = item;
+		delete[] m_items;
+		m_items = newitem;
+		m_size++;
+		if (observe != nullptr)
+		{
+			observe(*this, item);
+		}
+		return *this;
+	}
+template<typename T>
+	Collection<T>::~Collection() {
+		delete[] m_items;
+	}
+In the above example, I designed a templated class Collection that manages dynamic memory
+of type type T named m_items. The += operator resize and allocates dynamic memory when a
+new item is added and the destructor of Collection class deletes the array of memory from
+dynamic memory.
+
+2.design and code a function object
+eg-void SpellChecker::operator()(string& text) {
+		for (size_t i = 0; i < 6; i++)
+		{
+			size_t start = text.find(m_badWords[i]);
+			while (start != -1)
+			{
+				text.replace(start, strlen(m_badWords[i].c_str()), m_goodWords[i]);
+				m_errors[i]++;
+				start = text.find(m_badWords[i], start + 1);
+			}
+		}
+	}
+In the above example, I created a function object of class SpellChecker that has three attributes
+of arrays. m_badWords stores the list of erroneous spellings, m_goodWords stores the list of
+correct spellings and m_errors stores the list of number of errors found in each of m_badWords.
+I stored the list of correct and incorrect words parallely and list of count of each replacement
+of incorrect word in the corresponding index of the array.
+
+3.design and code a lambda expression
+eg-auto lib = [usdToCadRate, gbpToCadRate](sdds::Book& book) {
+		if (book.country() == "US")
+		{
+			book.price() *= usdToCadRate;
+		}
+		else if (book.country() == "UK" && (book.year() >= 1990 && book.year() <= 1999))
+		{
+			book.price() *= gbpToCadRate;
+		}
+	};
+In the above example, I creadted a lambda expression in which I am capturing the local variables of
+the main function which are (usdToCadRate and gbpToCadRate) to update the price of the sdds::Book& book
+paramenter passed to the lambda expression. The lambda expression is accessable through the identifier
+lib. lib can be used as a functor that takes sdds::Book& book as a parameter.
+
+4.code a member function that receives the address of a callback function to execute
+eg-template<typename T>
+	void Collection<T>::setObserver(void (*observer)(const Collection<T>& collect, const T& item)) {
+		observe = observer;
+	}
+In the above example, I created a member function(setObserver) of class Collection that takes an address
+of a function that has (const Collection<T>& collect, const T& item) as parameters. setObserver function
+stores the address of the parameter function to the function pointer(observe) in the Collection class
+attribute to be accessed by the += operator overload function.
+
+5.throw exceptions of different types
+eg-throw "Bad file name!";
+throw std::out_of_range("Bad index [" + std::to_string(idx) + "].Collection has[" + std::to_string(m_size) + "] items.");
+In the above example, I am using throw to to throw an exception of two different types. The first type is
+a const char* that is thrown when the file is failed to open and the second is of type out_of_range type that
+is used when a value out of the boundry of access is accessed.
+
+6.distinguish exception types from one another
+eg-try
+	{
+		for (auto i = 0u; i < 10; ++i)
+			std::cout << theCollection[i];
+	}
+	catch (std::out_of_range error)
+	{
+		std::cerr << "**EXCEPTION: " << error.what() << std::endl;
+	}
+		try
+		{
+			SpellChecker sp(argv[i]);
+			for (auto j = 0u; j < library.size(); ++j)
+				library[j].fixSpelling(sp);
+			sp.showStatistics(std::cout);
+
+			for (auto j = 0u; j < theCollection.size(); ++j)
+				theCollection[j].fixSpelling(sp);
+			sp.showStatistics(std::cout);
+		}
+		catch (const char* error)
+		{
+			std::cerr << "** EXCEPTION: " << error << std::endl;
+		}
+In the above example, I destinguish the type of error by seeing the type of error in the catch.
+In the first example, catch has an error of type out_of_range and in the second example catch
+has an error of type const char*.

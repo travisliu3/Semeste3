@@ -1,0 +1,103 @@
+-- ***********************
+-- Name: Nivedita Sharma
+-- ID: 138647201
+-- Date: 14 November, 2022
+-- Purpose: Lab 6 DBS311
+-- ***********************
+
+-- Q1
+CREATE OR REPLACE PROCEDURE cal_salarydbs311_223zee31 (id IN NUMBER) AS
+BEGIN
+    DECLARE
+        years_in_company NUMBER;
+        fname   VARCHAR2(20 BYTE);
+        lname   VARCHAR2(20 BYTE);
+        salary NUMBER := 10000;
+        BEGIN
+            SELECT first_name, last_name
+            INTO fname, lname
+            FROM employees
+            WHERE id = employee_id;
+            SELECT EXTRACT(year FROM hire_date)
+            INTO years_in_company
+            FROM employees
+            WHERE employee_id = id;
+            years_in_company := EXTRACT(year FROM sysdate) - years_in_company;
+            LOOP
+                years_in_company := years_in_company;   
+                EXIT WHEN years_in_company = -1;
+                salary := salary + (salary*0.05);
+            END LOOP;
+            DBMS_OUTPUT.PUT_LINE ('First Name: ' || fname);
+            DBMS_OUTPUT.PUT_LINE ('Last Name: ' || lname);
+            DBMS_OUTPUT.PUT_LINE ('Salary Name: ' || salary);
+            EXCEPTION
+                WHEN NO_DATA_FOUND
+                THEN
+                    DBMS_OUTPUT.PUT_LINE('No data found!');
+        END;
+END cal_salarydbs311_223zee31;
+/
+
+BEGIN
+  cal_salarydbs311_223zee31(&EmployeeID);
+END;
+/
+
+
+-- Q2
+CREATE OR REPLACE PROCEDURE city_department (cityName IN VARCHAR2) AS
+BEGIN
+    DECLARE
+        d_dep departments%rowtype;
+        CURSOR d_depat IS
+            SELECT d.department_id, department_name,manager_id,d.location_id
+            FROM departments d JOIN locations l ON d.location_id = l.location_id
+            WHERE UPPER(l.city) = UPPER(cityName);
+        BEGIN
+            OPEN d_depat;
+            LOOP
+                FETCH d_depat INTO d_dep;
+                EXIT WHEN d_depat%notfound;
+                DBMS_OUTPUT.PUT_LINE ('Department_id: ' || d_dep.department_id);
+                DBMS_OUTPUT.PUT_LINE ('Department_name: ' || d_dep.department_name);
+            END LOOP;
+            CLOSE d_depat;
+        END;
+END city_department;
+/
+
+BEGIN
+  city_department('&cityName');
+END;
+/
+
+
+-- Q3
+CREATE OR REPLACE PROCEDURE emp_wo_heddbs311_223zee31 AS
+        lname   VARCHAR2(20 BYTE);
+        emp_id  NUMBER;
+        depat_name  VARCHAR2(30 BYTE);
+        BEGIN
+            DBMS_OUTPUT.PUT_LINE('Employee #		Last Name		Department Name');
+            FOR x IN 31 .. 105 LOOP
+                SELECT employee_id, last_name, department_name
+                INTO emp_id, lname, depat_name
+                FROM employees JOIN departments USING (department_id)
+                WHERE x = employee_id;
+                IF depat_name = null THEN 
+                    DBMS_OUTPUT.PUT_LINE(emp_id || '    	     	' || lname || '	    	no department name');
+                ELSE
+                    DBMS_OUTPUT.PUT_LINE(emp_id || '    		    ' || lname || '	    	' || depat_name);
+                END IF;
+            END LOOP;
+            EXCEPTION
+                WHEN NO_DATA_FOUND THEN
+                    DBMS_OUTPUT.PUT_LINE('END of File!!!');
+END emp_wo_heddbs311_223zee31;
+/
+
+BEGIN
+  emp_wo_heddbs311_223zee31();
+END;
+/
